@@ -16,7 +16,6 @@
           crossorigin="anonymous"
         />
 
-       
         <div class="row gutters-sm">
           <div class="col-md-4 mb-3">
             <div class="card">
@@ -31,13 +30,9 @@
                   />
 
                   <div class="mt-3">
-                  
                     <h4>{{user.username}}</h4>
-                    
-                    <p class="text-secondary mb-1">Parent</p>
-                    <p class="text-muted font-size-sm">
-                     works at bla bla
-                    </p>
+                    <p class="text-secondary mb-1">BabySitter</p>
+                   
 
                     <button class="btn btn-outline-primary">Message</button>
                   </div>
@@ -50,77 +45,77 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-sm-3">
-                   
-                    <h6 class="mb-0">Check your Demands </h6>
+                    <h6 class="mb-0"> Name</h6>
                   </div>
-                  
-                 
+                  <div class="col-sm-9 text-secondary">{{user.username}}</div>
+                  </div>
+                <hr />
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Email</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">{{user.email}}</div>
                 </div>
-                
 
-
-               
-
-                
-               
+                <hr />
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">City</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                   {{user.city}}
+                  </div>
                 </div>
-                
+                <hr />
                 <div class="row">
                   <div class="col-sm-12">
-              
-                  </div>
-                </div>
-              </div>
-         
-          
-              <div class="col-md-12">
-                <div class="card h-100">
-                  <div class="card-body">
-                    <div class="media g-mb-30 media-comment" v-for="offer in offer"
-                          :key="offer.id">
-                      <div
-                        class="media-body u-shadow-v18 g-bg-secondary g-pa-30"
-                      >
-                        <br />
-
-                        
-                        <div
-                          class="g-mb-15"
-                          
-                        >
-                         <img
-                    v-bind:src="offer.image"
-                    alt="Admin"
-                    class="rounded-circle"
-                    width="70"
-                    border-radius="50%"
-                  />
-                          <h5 class="h5 g-color-gray-dark-v1 mb-0">
-                           From  {{ offer.sender }}
-                          </h5>
-                          <span class="g-color-gray-dark-v4 g-font-size-12"> duration :{{
-                            offer.duration
-                          }} hours</span>
-
-                          <p>
-                            {{ offer.Note }}
-                          </p>
-                          <div id="menu_haut">
-                          <a class="btn btn-success" target="__blank">Accept</a>
-                           <a class="btn btn-warning" target="__blank">Delete</a>
-                           </div>
-                          <hr/>
-                        </div>
-                        
-                        <ul class="list-inline d-sm-flex my-0">
-                        
-                        </ul>
-                      </div>
-                    </div>
+                    <router-link :to="{ name: 'editProfile_bs' }">
+                      <a class="btn btn-info" target="__blank">Edit</a>
+                    </router-link>
                   </div>
                 </div>
               </div>
             </div>
+            <h5>Reviews</h5>
+            <div class="row gutters-sm">
+
+              <div class="col-sm-12 mb-2" v-for="review in review" :key="review.id">
+                
+                <div class="card h-100">
+                  
+                  <div class="card-body">
+                    <div class="media g-mb-30 media-comment">
+                      
+                      <div
+                        class="media-body u-shadow-v18 g-bg-secondary g-pa-30"
+                      >
+                      
+                        <div class="g-mb-15"  >
+                          <
+                          <h5 class="h5 g-color-gray-dark-v1 mb-0">From {{review.sender}}</h5>
+                          <span class="g-color-gray-dark-v4 g-font-size-12"
+                           >{{review.date}}</span
+                          >
+                        
+
+                        <p>
+                         {{review.content}}
+                        </p>
+                        <hr/>
+</div>
+                        <ul class="list-inline d-sm-flex my-0">
+                         
+                          
+                        </ul>
+                      </div>
+                      
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -128,31 +123,36 @@
 </template>
 <script>
 import Header from "@/components/header/header.vue";
+
+
 import axios from "axios";
 export default {
   name: "profile",
   components: { Header },
-  data: () => {
+   data: () => {
     return {
-      user: [],
-      offer: [
+      user:[],
+      review:[
         {
          
-        },
+        }
       ],
-      offerForm: {},
-    };
-  },
-  mounted(){
+      reviewsForm:{}
+    }
+},
+ mounted(){
 
- axios
+     if ((localStorage.getItem('user')!='null'))
+    {
+      
+       axios
       .get("http://localhost:5000/api/babysitter/"+localStorage.getItem('user'))
       
       
       .then((response) => {
         this.user = response.data[0];
         console.log(response.data[0])
-          
+          localStorage.setItem('id',response.data[0].id)
         
       })
       .catch((reason) => {
@@ -160,36 +160,30 @@ export default {
       });
 
 
-
-
-
-    
-axios.get("http://localhost:5000/api/babysitter/offers/"+localStorage.getItem('id'))
-.then((response) => {
-    this.offer=response.data;
-       
-        })
-        .catch((reason) => {
-          console.log("the error is ", reason);
-        });
+      axios.get("http://localhost:5000/api/review/"+localStorage.getItem('user')).then((response) => {
+        this.review = response.data;
+        console.log(response)
+        
+      })
+      .catch((reason) => {
+        console.log("the error is ",reason,);
+      })
+     
+    }
+    else{
+      this.$router.push('/login');
+    }
+   
+     
   },
-  methods: {
-    Edit(id) {
-      console.log("edit" + id);
-    },
-  },
-};
+methods:{
+    Edit(id){
+      console.log('edit'+id);
+    }
+}
+,};
 </script>
 <style scoped>
-
-
-#menu_haut a
-{
-  color: #4f5050;
-  padding: 7px;/* pour un espace de 5+5px par exemple*/
-   margin-left: 10px;
-}
-
 body {
   margin-top: 20px;
 
@@ -278,14 +272,15 @@ body {
 }
 
 .g-bg-secondary {
-background-color: #f0f0f025 !important;}
+  background-color: #f0f0f025 !important;
+}
 
 .u-shadow-v18 {
-  box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0);
 }
 
 .g-color-gray-dark-v4 {
-  color: #777 !important;
+  color: rgb(152, 156, 186) !important;
 }
 
 .g-font-size-12 {

@@ -89,10 +89,10 @@
                           
                         >
                          <img
-                    v-bind:src="offer.image"
+                    v-bind:src="review.image"
                     alt="Admin"
                     class="rounded-circle"
-                    width="70"
+                    width="50"
                     border-radius="50%"
                   />
                           <h5 class="h5 g-color-gray-dark-v1 mb-0">

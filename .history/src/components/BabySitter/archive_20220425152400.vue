@@ -88,13 +88,7 @@
                           class="g-mb-15"
                           
                         >
-                         <img
-                    v-bind:src="offer.image"
-                    alt="Admin"
-                    class="rounded-circle"
-                    width="70"
-                    border-radius="50%"
-                  />
+                        
                           <h5 class="h5 g-color-gray-dark-v1 mb-0">
                            From  {{ offer.sender }}
                           </h5>
